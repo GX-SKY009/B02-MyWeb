@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ChatGPT</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="https://images2.imgbox.com/49/e1/L8gdlv7E_o.png">
+    <style>
+        html {
+            margin: 0px;
+            padding: 0px
+        }
+
+        /*身体*/
+        body {
+            background: rgba(9, 8, 8, 0.88);
+            transition: all 0.5s;
+        }
+
+        .switch {
+            position: absolute;
+            top: 2%;
+            /*left: 98%;*/
+            right: 1%;
+            width: 50px;
+            height: 25px;
+            background-color: #f6f6f5;
+            border-radius: 30px;
+            box-shadow: 0 0 2px #666;
+            cursor: pointer;
+            transition: all 0.5s;
+        }
+
+        .switch::before {
+            position: absolute;
+            content: '';
+            width: 25px;
+            height: 25px;
+            background-color: rgba(225, 134, 31, 0.51);
+            border-radius: 50%;
+            left: 0;
+            transition: all 0.5s;
+        }
+
+        .switch.active {
+            background-color: #666;
+        }
+
+        .switch.active::before {
+            left: 25px;
+        }
+
+        /*标题*/
+
+        .title-div {
+            text-align: center;
+            font-family: "Times New Roman";
+            font-weight: 800;
+            font-size: 30px;
+            margin-top: 1%;
+            margin-bottom: 1%;
+            color: #FFFFFF;
+        }
+
+        .title-author-div {
+            text-align: center;
+            color: #FFFFFF;
+            margin-top: 1%;
+            margin-bottom: 1%;
+        }
+
+        .title-author-div a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        @keyframes option-div {
+            0% {
+                -webkit-transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                -webkit-transform: translate3d(0, -50px, 0);
+                transform: translate3d(0, -50px, 0);
+            }
+        }
+
+        .chat-div {
+            /*border: 1px solid #999;*/
+            margin: 20px auto;
+            height: 550px;
+            font-size: 15px;
+            position: fixed;
+            bottom: 0;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+
+        .chat-home {
+            /*border: 5px solid purple;*/
+            width: 100%;
+        }
+
+        /*chat-div隐藏滚动条但是可以滚动*/
+        .chat-div::-webkit-scrollbar {
+            display: none;
+        }
+
+        .option-div {
+            margin-top: 2%;
+            margin-bottom: 2%;
+        }
+
+        .option-div div {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /*按钮*/
+        .custom-btn {
+            width: 130px;
+            height: 40px;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 25px;
+            font-family: 'Lato', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+            box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+            7px 7px 20px 0px rgba(238, 229, 229, 0.19),
+            4px 4px 5px 0px rgba(248, 235, 235, 0.1);
+            outline: none;
+        }
+
+        .submit-btn {
+            background: rgb(247, 150, 192);
+            background: radial-gradient(circle, rgba(247, 150, 192, 1) 0%, rgba(118, 174, 241, 1) 100%);
+            line-height: 42px;
+            padding: 0;
+            border: none;
+        }
+
+        .submit-btn span {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .submit-btn:before,
+        .submit-btn:after {
+            position: absolute;
+            content: "";
+            height: 0%;
+            width: 1px;
+            box-shadow: -1px -1px 20px 0px rgba(255, 255, 255, 1),
+            -4px -4px 5px 0px rgba(255, 255, 255, 1),
+            7px 7px 20px 0px rgba(202, 130, 222, 0.43),
+            4px 4px 5px 0px rgba(127, 72, 155, 0.35);
+        }
+
+        .submit-btn:before {
+            right: 0;
+            top: 0;
+            transition: all 500ms ease;
+        }
+
+        .submit-btn:after {
+            left: 0;
+            bottom: 0;
+            transition: all 500ms ease;
+        }
+
+        .submit-btn:hover {
+            background: transparent;
+            color: #76aef1;
+            box-shadow: none;
+        }
+
+        .submit-btn:hover:before {
+            transition: all 500ms ease;
+            height: 100%;
+        }
+
+        .submit-btn:hover:after {
+            transition: all 500ms ease;
+            height: 100%;
+        }
+
+        .submit-btn span:before,
+        .submit-btn span:after {
+            position: absolute;
+            content: "";
+            box-shadow: -1px -1px 20px 0px rgba(255, 255, 255, 1),
+            -4px -4px 5px 0px rgba(255, 255, 255, 1),
+            7px 7px 20px 0px rgba(221, 172, 232, 0.41),
+            4px 4px 5px 0px rgba(182, 123, 201, 0.37);
+        }
+
+        .submit-btn span:before {
+            left: 0;
+            top: 0;
+            width: 0%;
+            height: .5px;
+            transition: all 500ms ease;
+        }
+
+        .submit-btn span:after {
+            right: 0;
+            bottom: 0;
+            width: 0%;
+            height: .5px;
+            transition: all 500ms ease;
+        }
+
+        .submit-btn span:hover:before {
+            width: 100%;
+        }
+
+        .submit-btn span:hover:after {
+            width: 100%;
+        }
+
+        .reset-btn {
+            background: rgb(255, 151, 0);
+            border: none;
+            z-index: 1;
+        }
+
+        .reset-btn:after {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 0;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            border-radius: 5px;
+            background-color: #eaf818;
+            background-image: linear-gradient(315deg, #eaf818 0%, #f6fc9c 74%);
+            box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+            7px 7px 20px 0px rgba(0, 0, 0, .1),
+            4px 4px 5px 0px rgba(0, 0, 0, .1);
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            color: #000;
+        }
+
+        .reset-btn:hover:after {
+            top: auto;
+            bottom: 0;
+            height: 100%;
+        }
+
+        .reset-btn:active {
+            top: 2px;
+        }
+
+        /*输入框*/
+        input[type="text"] {
+            background: rgba(74, 65, 89, 0.04);
+            color: #FFFFFF;
+            height: 30px;
+            font-size: 15px;
+            width: 50%;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #66afe9;
+            outline: 0;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+        }
+
+        /*双方聊天框*/
+        .chat-div {
+            align-items: center;
+            max-width: 55%;
+            margin: 1% auto;
+            position: static;
+            font-family: sans-serif;
+            font-size: 15px;
+        }
+
+        .human-msg, .ai-msg {
+            margin-top: 2%;
+            margin-bottom: 2%;
+            color: #f8f4f4;
+            padding: 10px;
+            background-color: rgba(239, 235, 239, 0.07);
+            border-radius: 5px;
+            position: relative;
+            float: left;
+            clear: both;
+        }
+
+        .ai-msg {
+            float: left;
+            margin-right: 30px;
+            animation: ai-msg 0.6s linear 1;
+        }
+
+        .human-msg {
+            float: right;
+            margin-left: 30px;
+            animation: human-msg 1s linear 1;
+        }
+
+        @keyframes ai-msg {
+            0% {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0px);
+            }
+        }
+
+        @keyframes human-msg {
+            0% {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0px);
+            }
+        }
+
+        /*消息弹出*/
+        .message {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            color: rgba(0, 0, 0, 0.85);
+            font-size: 14px;
+            font-variant: tabular-nums;
+            line-height: 1.5715;
+            list-style: none;
+            -webkit-font-feature-settings: 'tnum';
+            font-feature-settings: 'tnum';
+            position: fixed;
+            top: 8px;
+            left: 0;
+            z-index: 1010;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .message-notice {
+            padding: 8px;
+            text-align: center;
+
+            -webkit-animation-name: MessageMoveOut;
+            animation-name: MessageMoveOut;
+            -webkit-animation-duration: 0.3s;
+            animation-duration: 0.3s;
+        }
+
+        .message-content {
+            display: inline-block;
+            padding: 10px 16px;
+            background: #fff;
+            border-radius: 2px;
+            -webkit-box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+            pointer-events: all;
+        }
+
+        @-webkit-keyframes MessageMoveOut {
+            0% {
+                max-height: 0;
+                padding: 0;
+                opacity: 0;
+            }
+            100% {
+                max-height: 150px;
+                padding: 8px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes MessageMoveOut {
+            0% {
+                max-height: 0;
+                padding: 0;
+                opacity: 0;
+            }
+            100% {
+                max-height: 150px;
+                padding: 8px;
+                opacity: 1;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+<div>
+    <div class="title-div">OPENAI CHATGPT</div>
+
+    <hr/>
+    <div class="chat-home">
+        <div class="chat-div">
+            <!--聊天框内容-->
+        </div>
+
+        <div class="option-div">
+            <div><input type="text" placeholder="Ask me anything..." class="human-input"></div>
+            <div>
+                <button class="custom-btn reset-btn">RESET💫</button>
+                <button class="custom-btn submit-btn">SUBMIT⚛️</button>
+            </div>
+        </div>
+    </div>
+    <!--背景开关-->
+    <div class="switch"></div>
+    <!--消息弹窗-->
+    <div class="message"></div>
+
+    <hr/>
+    <div class="title-author-div">
+        Copyright <span></span><a title="Click to send me an email"
+                                  href="mailto:gx009@outlook.com">&copy;GX-SKY</a> ，All Rights Reserved
+    </div>
+</div>
+</body>
+
+<script>
+
+    //初始化版权年份信息
+    document.getElementsByClassName('title-author-div')[0].getElementsByTagName('span')[0].innerText = new Date().getFullYear()
+    /**
+     * 聊天框
+     * @type {Element}
+     */
+    const chat_div = document.getElementsByClassName('chat-div')[0];
+
+    const human_input = document.getElementsByClassName('human-input')[0]
+    /**
+     * 清空内容
+     */
+    document.getElementsByClassName('reset-btn')[0].onclick = () => {
+        chat_div.innerHTML = '';
+        window.localStorage.removeItem('my_chat_msg');
+        show_msg('success', '✔ Cleanup succeeded')
+    }
+
+    /**
+     * 提交按钮
+     */
+    document.getElementsByClassName('submit-btn')[0].onclick = () => submit_prompt()
+
+    /**
+     * 初始化聊天信息
+     */
+    const init_my_chat_msg = () => {
+        let my_chat_msg = window.localStorage.getItem('my_chat_msg')
+        if (my_chat_msg) chat_div.innerHTML = my_chat_msg
+        set_scroll_height()
+    }
+
+    /**
+     * 点击提交按钮
+     */
+    const submit_prompt = () => {
+        if (!human_input.value.trim()) return show_msg('warning', 'Please enter any questions😶‍🌫️...')
+        promptSubmit(human_input.value)
+        human_input.value = ''
+    }
+
+    /**
+     * 发送信息给机器人
+     * @param prompt
+     * @returns {Promise<void>}
+     */
+    const promptSubmit = async (prompt) => {
+        //获取当前时间戳
+        const timestamp = Date.parse(new Date());
+        const human_timestamp = 'human-' + timestamp
+        const ai_timestamp = 'ai-' + timestamp
+        chat_div.insertAdjacentHTML('beforeend', '<div title="Double-click to copy the content！" ondblclick="copy_content(this)" class="human-msg ' + human_timestamp + '"</div>')
+        document.getElementsByClassName(human_timestamp)[0].append(prompt)
+        set_scroll_height()
+
+        const result = await creatGPTClient(prompt)
+        chat_div.insertAdjacentHTML('beforeend', '<div title="Double-click to copy the content！" ondblclick="copy_content(this)" class="ai-msg  ' + ai_timestamp + '"></div>')
+        element_typewriter(document.getElementsByClassName(ai_timestamp)[0], result.toString().trim())
+        // console.log('result', result)
+    }
+
+    /**
+     * 创建机器人链接模型
+     * @param prompt
+     * @returns {Promise<any>}
+     */
+    const creatGPTClient = (prompt) => {
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + String(window.atob('c2stMk11SUVRa0h3RHdldzltd0xqa2JUM0JsYmtGSkRkNGdoZ09JTEhOdEZnNTNMcnpk'))
+            },
+            body: JSON.stringify({
+                'prompt': prompt,
+                'temperature': 0.5,
+                'max_tokens': 2000,
+                'top_p': 1,
+                'frequency_penalty': 0,
+                'presence_penalty': 0.5,
+                'stop': ["\"\"\""],
+            })
+        };
+        return fetch(
+            'https://api.openai.com/v1/engines/text-davinci-003/completions',
+            requestOptions
+        ).then(response => response.json()).then(data => {
+            if (data.choices) return data.choices[0].text
+            else throw data.error.message
+        }).catch(err => {
+            return "Error!Massage：" + err
+        });
+    }
+
+    /*打字机效果*/
+    const element_typewriter = (el, text) => {
+
+        let speed = typing_speed(text)
+        const typewriter = (txt, n) => {
+            // 判断 n 是否小于 txt 的长度
+            if (n < txt.length + 1) {
+                // 拼接字符串
+                el.innerText = txt.substring(0, n);
+                // 递归调用
+                setTimeout(() => {
+                    typewriter(txt, n + 1);
+                }, speed);
+            } else {
+                //保存本地聊天信息
+                window.localStorage.setItem("my_chat_msg", chat_div.innerHTML)
+            }
+            set_scroll_height();
+        }
+        typewriter(text, 0);
+
+
+        /**
+         * 设置打字速度
+         * @param text
+         */
+        function typing_speed(text) {
+            let len = text.toString().length
+            if (len > 1000) return 10;
+            else if (len <= 1000 && len > 500) return 3;
+            else if (len <= 500 && len > 300) return 6;
+            else if (len <= 300 && len > 200) return 9;
+            else if (len <= 200 && len > 100) return 12;
+            else if (len <= 100 && len > 50) return 15;
+            else if (len <= 50 && len > 30) return 40;
+            else if (len <= 30 && len > 10) return 60;
+            else if (len <= 10 && len > 0) return 80;
+        }
+    }
+
+    /**
+     * 按回车键发送
+     * @param event
+     */
+    document.onkeydown = function (event) {
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        if (e && e.which === 13) { // enter 键
+            //要做的事情
+            submit_prompt()
+        } else if (e.which === 27) {
+            human_input.value = ''
+        }
+    };
+
+    /*内容复制*/
+    const copy_content = (el) => {
+        var text = el.innerText;
+        var input = document.createElement('input');
+        document.body.appendChild(input);
+        input.setAttribute('value', text);
+        input.select();
+        document.execCommand('Copy');
+        document.body.removeChild(input);
+        show_msg('success', '✔ The copy succeeded');
+    }
+
+    /**
+     * 消息弹出框
+     * @param msg
+     */
+    const show_msg = (type, msg, time = 3000) => {
+        const parentDiv = document.createElement("div");
+        const div = document.createElement("div");
+        div.className = "message-content";
+        div.innerHTML = msg;
+        parentDiv.appendChild(div);
+        parentDiv.className = "message-notice";
+        parentDiv.setAttribute('style', 'color:' + get_type(type))
+        document.getElementsByClassName("message")[0].appendChild(parentDiv);
+        setTimeout(() => {
+            parentDiv.remove();
+        }, time);
+
+        /**
+         * 获取提示颜色类型
+         * @param type
+         * @returns {string}
+         */
+        function get_type(type) {
+            switch (type) {
+                case 'success':
+                    return '#52c41a'
+                case 'warning':
+                    return '#e7c03e'
+                case 'danger':
+                    return '#e53030'
+                case 'info':
+                    return '#eeebd8'
+            }
+        }
+    }
+
+    /**
+     * 设置页面显示内容置底
+     */
+    const set_scroll_height = () => {
+        chat_div.scrollTop = chat_div.scrollHeight;
+    }
+
+
+    const switchNode = document.querySelector('.switch');
+    switchNode.addEventListener('click', function () {
+
+        let body_style = document.body.style;//body样式
+        let title_div = document.getElementsByClassName('title-div')[0].style//标题
+        let title_author_div = document.getElementsByClassName('title-author-div')[0].style//作者
+        let title_author_div_a = document.getElementsByClassName('title-author-div')[0].getElementsByTagName('a')[0].style//作者名
+        let input = document.getElementsByTagName('input')[0].style//输入框
+        //解决聊天框未渲染还没有拿到元素的问题
+        let human_msg = document.getElementsByClassName('human-msg');//使用者聊天框
+
+        let ai_msg = document.getElementsByClassName('ai-msg');//ai聊天框
+
+        if (this.classList.contains('active')) {
+            this.classList.remove('active');
+            //黑色背景
+            body_style.backgroundColor = 'rgba(9, 8, 8, 0.88)';
+            title_div.color = '#ffffff'
+            title_author_div.color = '#ffffff'
+            title_author_div_a.color = '#ffffff'
+            input.color = '#ffffff'
+
+            let human_ai_msg = {
+                color: '#ffffff',
+                backgroundColor: 'rgba(239, 235, 239, 0.07)'
+            }
+            batch_modify_style([human_msg, ai_msg], human_ai_msg)
+
+            //记住聊天背景
+            window.localStorage.setItem('bg_switch', 'active')
+        } else {
+            //白色背景
+            this.classList.add('active');
+            body_style.backgroundColor = '#ffffff';
+            title_div.color = 'rgba(9, 8, 8, 0.88)'
+            title_author_div.color = 'rgba(9, 8, 8, 0.88)'
+            title_author_div_a.color = 'rgba(9, 8, 8, 0.88)'
+            input.color = 'rgba(9, 8, 8, 0.88)'
+
+            let human_ai_msg = {
+                color: 'rgba(9, 8, 8, 0.88)',
+                backgroundColor: 'rgba(217,210,168,0.16)'
+            }
+            batch_modify_style([human_msg, ai_msg], human_ai_msg)
+
+            //记住聊天背景
+            window.localStorage.setItem('bg_switch', 'no_active')
+        }
+
+        /**
+         *  批量修改css
+         * @param els 二维数组
+         * @param style
+         */
+        function batch_modify_style(els, style) {
+            for (let i = 0; i < els.length; i++) {
+                for (let j = 0; j < els[i].length; j++) {
+                    els[i][j].style.color = style.color
+                    els[i][j].style.backgroundColor = style.backgroundColor
+                }
+            }
+        }
+    })
+
+    /**
+     * 初始化本地聊天记录
+     */
+    init_my_chat_msg()
+
+</script>
+
+</html>
